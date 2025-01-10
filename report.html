@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #202040;
+            font-family: Tahoma, Verdana, sans-serif;
+            font-size: 14pt;
+        }
+        .container{
+            background-color: #eef;
+            margin: 60px;
+            padding: 30px 15px 15px;
+
+            color: #101020;
+            box-shadow: 10px 10px;
+        }
+        .center{
+            text-align: center;
+        }
+        h1{
+            margin: 10px 0;
+        }
+        hr{
+            border: 0.5px solid;
+        }
+        #vulnlist{
+            list-style-type: none;
+            margin: 0;
+        }
+        #timestamp{
+            display: block;
+            margin-top: 20px;
+            opacity: 40%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="center">
+            <h1>Score Report</h1>
+            <b id="title">The Image Name</b><br>
+            <span id="statement">You have resolved 1 of 10 vulnerabilities, for 5 points.</span> 
+        </div>
+        <hr>
+        <b>Found vulnerabilities:</b>
+        <ul id="vulnlist">
+            <li>2 pts: vulnerability</li>
+        </ul>
+        <span id="timestamp">Report generated: Time</span>
+    </div>
+
+    <template id="raw_json">
+JSONHERE
+    </template>
+    
+    <script>
+        const element = document.getElementById("raw_json")
+        const title = document.getElementById("title")
+        const statement = document.getElementById("statement")
+        const vulnlist = document.getElementById("vulnlist")
+
+        setTimeout(()=>{
+            const json = JSON.parse(element.innerHTML)
+            const vuln_trims = json.vulns.filter((x)=>x!=null)
+        }, 500)
+
+    </script>
+</body>
+</html>
