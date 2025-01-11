@@ -7,18 +7,18 @@ _header() {
     local title="$1"
     local injectbool="$2"
     local date=$(date)
-    echo "{\"header\":{\"title\":\"$title\", \"inject\":$injectbool, \"timestamp\":$date}, \"vulns\":[" >> /tmp/score.json
+    echo -n "{\"header\":{\"title\":\"$title\", \"inject\":$injectbool, \"timestamp\":\"$date\"}, \"vulns\":[" >> /tmp/score.json
 }
 
 _append_found() {
     local vuln_name="$1"
     local points="$2"
 
-    echo "{\"name\":\"$vuln_name\", \"points\":$points}," >> /tmp/score.json
+    echo -n "{\"name\":\"$vuln_name\", \"points\":$points}," >> /tmp/score.json
 }
 
 _append_unsolved() {
-    echo "null," >> /tmp/score.json
+    echo -n "null," >> /tmp/score.json
 }
 
 _terminate(){
@@ -28,11 +28,11 @@ _terminate(){
     # reset html file with template
     cat "$template_html_file" > "$html_file" 
     # remove the trailing comma
-    sed -i 's/\(.*\),/\1 /' /tmp/score.json
+    sed -i 's/,\([^,]*\)$/ \1/' /tmp/score.json
     # close brackets
     echo "]}" >> /tmp/score.json
     # stuff raw json into html because CORS prevents reading of local files in JS
-    sed -i -e "/JSONHERE/r /tmp/score.json" "$html_file"
+    sed -i -e "/<!--JSONHERE-->/r /tmp/score.json" -e "/<!--JSONHERE-->/d" "$html_file"
 
     rm /tmp/score.json
 }
@@ -130,4 +130,4 @@ check_text_exists "/etc/passwd" "administrator" "Added administrator user" 5 # D
 
 # keep this line at the end, input the path to score report html here
 # accepts two args: path to template html file, and path to actual html file
-_terminate "/path/to/template/html" "/path/to/actual/html"
+_terminate "/etc/scoring/report-template.html" "/home/acirr/Desktop/report.html"
