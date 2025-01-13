@@ -12,9 +12,10 @@
         }
         .container{
             background-color: #eef;
-            margin: 60px;
+            margin: 60px auto;
             padding: 30px 15px 15px;
-
+	    max-width: 800px;
+	    width: 75%;
             color: #101020;
             box-shadow: 10px 10px;
         }
@@ -47,9 +48,7 @@
         </div>
         <hr>
         <b>Found vulnerabilities:</b>
-        <ul id="vulnlist">
-            <li>2 pts: vulnerability</li>
-        </ul>
+        <div id="vulnlist"></div>
         <span id="timestamp">Report generated: Time</span>
     </div>
 
@@ -62,12 +61,25 @@
         const title = document.getElementById("title")
         const statement = document.getElementById("statement")
         const vulnlist = document.getElementById("vulnlist")
-
-        setTimeout(()=>{
-            const json = JSON.parse(element.innerHTML)
-            const vuln_trims = json.vulns.filter((x)=>x!=null)
-        }, 500)
-
+	const time = document.getElementById("timestamp")
+	let points = 0
+	let vulnstrings = ""
+        
+        const json = JSON.parse(element.innerHTML)
+        const vuln_trims = json.vulns.filter((x)=>x!=null)
+            
+        for(let i=0; i<vuln_trims.length; i++){
+	    points += vuln_trims[i].points
+	    vulnstrings += vuln_trims[i].name + "<br>"
+        }	    
+        title.innerText = json.header.title
+        statement.innerText = `You have resolved ${vuln_trims.length} of ${json.vulns.length} vulnerabilities, for ${points} points.`
+        vulnlist.innerHTML = vulnstrings
+	time.innerText = json.header.timestamp
+      
+	setInterval(()=>{
+	    location.reload()
+	},60000)
     </script>
 </body>
 </html>
